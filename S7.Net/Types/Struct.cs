@@ -24,10 +24,11 @@ namespace S7.Net.Types
 #else
                 .GetFields();
 #endif
-
-            foreach (var info in infos)
+            int count = 0;
+			foreach (var info in infos)
             {
-                switch (info.FieldType.Name)
+                count++;
+				switch (info.FieldType.Name)
                 {
                     case "Boolean":
                         numBytes += 0.125;
@@ -75,6 +76,10 @@ namespace S7.Net.Types
                         break;
                     default:
                         numBytes += GetStructSize(info.FieldType);
+                        if (count != infos.Count()) {
+                            if(numBytes % 2 != 0) 
+							    numBytes++;//word align
+						}
                         break;
                 }
             }
@@ -238,6 +243,8 @@ namespace S7.Net.Types
                         Buffer.BlockCopy(bytes, (int)Math.Ceiling(numBytes), buffer, 0, buffer.Length);
                         info.SetValue(structValue, FromBytes(info.FieldType, buffer));
                         numBytes += buffer.Length;
+                        if(numBytes %2 != 0)        //word align
+                            numBytes++;
                         break;
                 }
             }
