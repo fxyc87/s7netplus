@@ -78,8 +78,8 @@ namespace S7.Net.Types
                         break;
                 }
             }
-            return (int)numBytes;
-        }
+            return (int)Math.Ceiling(numBytes);     //For example: 9 bool data, length = 1.125, but actually occupies 2 bytes
+		}
 
         /// <summary>
         /// Creates a struct of a specified type by an array of bytes.
