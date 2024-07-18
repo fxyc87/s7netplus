@@ -9,12 +9,12 @@ namespace S7.Net.Types
     /// </summary>
     public static class Struct
     {
-        /// <summary>
-        /// Gets the size of the struct in bytes.
-        /// </summary>
-        /// <param name="structType">the type of the struct</param>
-        /// <returns>the number of bytes</returns>
-        public static int GetStructSize(Type structType)
+		/// <summary>
+		/// Gets the size of the struct in bytes.
+		/// </summary>
+		/// <param name="structType">the type of the struct</param>
+		/// <returns>the number of bytes</returns>
+		public static int GetStructSize(Type structType)
         {
             double numBytes = 0.0;
 
@@ -28,7 +28,11 @@ namespace S7.Net.Types
 			foreach (var info in infos)
             {
                 count++;
-				switch (info.FieldType.Name)
+				var type = info.FieldType;
+				string name = info.FieldType.Name;
+				if (type.BaseType == typeof(System.Enum))
+					name = Enum.GetUnderlyingType(type).Name;
+				switch (name)
                 {
                     case "Boolean":
                         numBytes += 0.125;
@@ -116,7 +120,11 @@ namespace S7.Net.Types
 
             foreach (var info in infos)
             {
-                switch (info.FieldType.Name)
+				var type = info.FieldType;
+				string name = info.FieldType.Name;
+				if (type.BaseType == typeof(System.Enum))
+					name = Enum.GetUnderlyingType(type).Name;
+				switch (name)
                 {
                     case "Boolean":
                         // get the value
